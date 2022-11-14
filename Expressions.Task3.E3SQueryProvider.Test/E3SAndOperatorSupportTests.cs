@@ -23,6 +23,8 @@ namespace Expressions.Task3.E3SQueryProvider.Test
         public void TestAndQueryable()
         {
             var translator = new ExpressionToFtsRequestTranslator();
+            var generator = new FtsRequestGenerator("http://www.myserver.com");
+
             Expression<Func<IQueryable<EmployeeEntity>, IQueryable<EmployeeEntity>>> expression
                 = query => query.Where(e => e.Workstation == "EPRUIZHW006" && e.Manager.StartsWith("John"));
             /*
@@ -35,7 +37,11 @@ namespace Expressions.Task3.E3SQueryProvider.Test
              */
 
             // todo: create asserts for this test by yourself, because they will depend on your final implementation
-            throw new NotImplementedException("Please implement this test and the appropriate functionality");
+            string translated = translator.Translate(expression);
+
+            var generatedRequest = generator.GenerateRequestUrl<EmployeeEntity>(translated);
+
+            Assert.Equal("Workstation:(EPRUIZHW006) AND Manager:(John*)", translated);
         }
 
         #endregion

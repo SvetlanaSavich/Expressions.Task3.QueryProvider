@@ -1,9 +1,11 @@
 ﻿using Expressions.Task3.E3SQueryProvider.Attributes;
+using Expressions.Task3.E3SQueryProvider.Models.Entities;
 using Expressions.Task3.E3SQueryProvider.Models.Request;
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Expressions.Task3.E3SQueryProvider
 {
@@ -34,12 +36,7 @@ namespace Expressions.Task3.E3SQueryProvider
 
             var ftsQueryRequest = new FtsQueryRequest
             {
-                Statements = new List<Statement>
-                {
-                    new Statement {
-                        Query = query
-                    }
-                },
+                Statements = query.Split(QueryHelper.Operators, StringSplitOptions.None).Select(st => new Statement { Query = st }).ToList(),
                 Start = start,
                 Limit = limit
             };
